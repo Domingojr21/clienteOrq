@@ -1,5 +1,7 @@
 package com.banreservas.integration.processors;
 
+import java.time.LocalDateTime;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.tempuri.ClienteBanreservasResponse;
@@ -32,26 +34,39 @@ public class ErrorResponseProcessor implements Processor {
         ClienteBanreservasResponse response = new ClienteBanreservasResponse();
         ClienteBanreservasResponse2 result = new ClienteBanreservasResponse2();
 
-        result.setCanal(String.valueOf(exchange.getProperty("canalRq")));
-        result.setUsuario(String.valueOf(exchange.getProperty("usuarioRq")));
-        result.setTerminal(String.valueOf(exchange.getProperty("terminalRq")));
-        result.setFechaHora(String.valueOf(exchange.getProperty("fechaHoraRq")));
-        result.setTRNID(String.valueOf(exchange.getIn().getHeader("sessionId")));
+        result.setCanal(getExchangeProperty(exchange, "canalRq"));
+        result.setUsuario(getExchangeProperty(exchange, "usuarioRq"));
+        result.setTerminal(getExchangeProperty(exchange, "terminalRq"));
+        if (exchange.getProperty("fechaHoraRq") != null) {
+            result.setFechaHora(String.valueOf(exchange.getProperty("fechaHoraRq")));
+        } else {
+            result.setFechaHora(LocalDateTime.now().toString());
+        }
+        result.setVersion(getExchangeProperty(exchange, "versionRq"));
+
         result.setResultado(Short.parseShort("1"));
-        result.setVersion(String.valueOf(exchange.getProperty("versionRq")));
+
+        String sessionId = exchange.getIn().getHeader("sessionId", String.class);
+        result.setTRNID(sessionId != null ? sessionId : "unknown");
 
         // Resultado siempre 1 para indicar error
         result.setResultado((short) 1);
-        
-        String mensaje = exchange.getProperty("Mensaje") != null ? 
-            String.valueOf(exchange.getProperty("Mensaje")) : "Error interno del servidor";
+
+        String mensaje = exchange.getProperty("Mensaje") != null ? String.valueOf(exchange.getProperty("Mensaje"))
+                : "Error interno del servidor";
         result.setMensaje(mensaje);
-        
+
+        response.setClienteBanreservasResult(result);
         exchange.getIn().setBody(response);
 
-        String sessionId = exchange.getIn().getHeader("sessionId", String.class);
         if (sessionId != null) {
             exchange.getIn().setHeader("sessionId", sessionId);
         }
+
+    }
+
+    private String getExchangeProperty(Exchange exchange, String propertyName) {
+        Object property = exchange.getProperty(propertyName);
+        return property != null ? String.valueOf(property) : "UNKNOWN";
     }
 }

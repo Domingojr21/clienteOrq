@@ -19,7 +19,6 @@ import org.tempuri.Telefonos;
 import org.tempuri.ArrayOfCorreos;
 import org.tempuri.Correos;
 import org.tempuri.ArrayOfSistemaRelacionado;
-import org.tempuri.SistemaRelacionado;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -79,13 +78,15 @@ public class MapBackendResponseProcessor implements Processor {
         }
     }
 
-    private void mapRequestDataToResponse(Exchange exchange, ClienteBanreservasResponse2 result) {
+   private void mapRequestDataToResponse(Exchange exchange, ClienteBanreservasResponse2 result) {
         result.setCanal(getExchangeProperty(exchange, "canalRq"));
         result.setUsuario(getExchangeProperty(exchange, "usuarioRq"));
         result.setTerminal(getExchangeProperty(exchange, "terminalRq"));
         result.setFechaHora(getExchangeProperty(exchange, "fechaHoraRq"));
         result.setVersion(getExchangeProperty(exchange, "versionRq"));
-        result.setTRNID(getExchangeProperty(exchange, "idOperacionRq"));
+        
+        String sessionId = exchange.getIn().getHeader("sessionId", String.class);
+        result.setTRNID(sessionId != null ? sessionId : "unknown");
     }
 
     private void setSuccessResponse(ClienteBanreservasResponse2 result, BackendResponse backendResponse) {

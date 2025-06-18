@@ -40,7 +40,7 @@ public class BanreservasClientRoute extends RouteBuilder {
         onException(ValidationException.class)
                 .handled(true)
                 .log(LoggingLevel.INFO, logger, "ValidationException capturada: ${exception.message}")
-                .setHeader("Content-Type", constant("application/xml"))
+                .setHeader("Content-Type", constant("text/xml"))
                 .process(errorResponseProcessor)
                 .marshal().jacksonXml()
                 .end();
@@ -56,32 +56,23 @@ public class BanreservasClientRoute extends RouteBuilder {
 
         from("cxf:bean:banreservasClientEndpoint")
                 .routeId("banreservas-client-route")
-                .log(LoggingLevel.INFO, logger, "Solicitud SOAP recibida")
+                .log(LoggingLevel.INFO, logger, "Solicitud SOAP recibida para ClienteBanreservas")
 
                 .process(validateRequestProcessor)
-
-                .choice()
-                .when(exchangeProperty("LoginError").isEqualTo(true))
-                .log(LoggingLevel.ERROR, log, "Error en login MICM detectado")
-                .setHeader("Content-Type", constant("text/xml"))
-                .process(errorResponseProcessor)
-                .marshal().jacksonXml()
-                .stop()
-                .end()
 
                 .process(generateBackendRequestProcessor)
 
                 .marshal().json()
+                .log(LoggingLevel.DEBUG, logger, "Request JSON generado: ${body}")
 
-                .to("direct:backend-notices-service")
+                .to("direct:backend-banreservas-client-service")
 
                 .choice()
                 .when(header("CamelHttpResponseCode").isEqualTo(200))
                 .log(LoggingLevel.INFO, logger, "Respuesta exitosa del backend")
                 .process(exchange -> {
                     String jsonResponse = exchange.getIn().getBody(String.class);
-                    logger.debug("JSON Response: {}", jsonResponse);
-
+                    logger.debug("JSON Response del backend: {}", jsonResponse);
                     try {
                         ObjectMapper mapper = new ObjectMapper();
                         mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
@@ -93,20 +84,20 @@ public class BanreservasClientRoute extends RouteBuilder {
                         throw new RuntimeException("Error procesando respuesta del backend: " + e.getMessage());
                     }
                 })
+                .process(mapBackendResponseProcessor)
                 .otherwise()
                 .log(LoggingLevel.ERROR, logger,
                         "Error en servicio backend. Código HTTP: ${header.CamelHttpResponseCode}")
-                .setProperty("Mensaje", constant("Error al consultar el servicio de búsqueda de avisos MICM"))
+                .setProperty("Mensaje", constant("Error al consultar el servicio de cliente Banreservas"))
                 .process(errorResponseProcessor)
                 .marshal().jacksonXml()
                 .stop()
                 .end()
+                
+                .setHeader("sessionId", exchangeProperty("originalSessionId"))
+                .setHeader("Content-Type", constant("text/xml"))
 
-                // .process(mapBackendResponseProcessor)
-
-                 .setHeader("sessionId", exchangeProperty("originalSessionId"))
-
-                .log(LoggingLevel.INFO, logger, "BusquedaGeneralAvisosMICM procesado exitosamente")
+                .log(LoggingLevel.INFO, logger, "ClienteBanreservas procesado exitosamente")
                 .end();
     }
 }

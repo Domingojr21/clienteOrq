@@ -5,6 +5,7 @@ import org.apache.camel.component.cxf.common.DataFormat;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 // import org.tempuri.BackEndServiceSoap;
+import org.tempuri.BackEndServiceSoap;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
@@ -61,7 +62,7 @@ public class CxfConfig {
         endpoint.setCamelContext(camelContext);
         endpoint.setAddress(addressService);
         endpoint.setPublishedEndpointUrl(endpointService);
-        // endpoint.setServiceClass(BackEndServiceSoap.class); // Interfaz generada desde el WSDL
+        endpoint.setServiceClass(BackEndServiceSoap.class); // Interfaz generada desde el WSDL
         endpoint.setDataFormat(DataFormat.PAYLOAD); // Usar formato crudo (XML) para más control
         endpoint.setLoggingFeatureEnabled(Boolean.parseBoolean(loggingService));
         endpoint.setWsdlURL("classpath:wsdl/ClienteBanreservas.wsdl");

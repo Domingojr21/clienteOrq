@@ -1,5 +1,7 @@
 package com.banreservas.integration.processors;
 
+import java.time.LocalDateTime;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.slf4j.Logger;
@@ -40,7 +42,6 @@ public class ValidateGeneralNoticesSearchRequestProcessor implements Processor {
         validate(exchange, request.getCanal(), "Canal");
         validate(exchange, request.getUsuario(), "Usuario");
         validate(exchange, request.getTerminal(), "Terminal");
-        validate(exchange, request.getFechaHora(), "FechaHora");
         validate(exchange, request.getVersion(), "Version");
 
         if (request.getIdentificacion() == null) {
@@ -49,7 +50,8 @@ public class ValidateGeneralNoticesSearchRequestProcessor implements Processor {
 
         validate(exchange, request.getIdentificacion().getNumeroIdentificacion(),
                 "Identificacion.NumeroIdentificacion");
-        validate(exchange, request.getIdentificacion().getTipoIdentificacion().value(), "Identificacion.TipoIdentificacion");
+        validate(exchange, request.getIdentificacion().getTipoIdentificacion().value(),
+                "Identificacion.TipoIdentificacion");
 
         // Validar headers obligatorios
         getHeaderOrThrow(exchange, "Authorization", "Unauthorized.");
@@ -59,6 +61,11 @@ public class ValidateGeneralNoticesSearchRequestProcessor implements Processor {
         exchange.setProperty("usuarioRq", request.getUsuario());
         exchange.setProperty("terminalRq", request.getTerminal());
         exchange.setProperty("fechaHoraRq", request.getFechaHora());
+        if (exchange.getProperty("fechaHoraRq") != null) {
+            exchange.setProperty("fechaHoraRq", request.getFechaHora());
+        } else {
+            exchange.setProperty("fechaHoraRq", LocalDateTime.now().toString());
+        }
         exchange.setProperty("versionRq", request.getVersion());
         exchange.setProperty("NumeroIdentificacionRq",
                 request.getIdentificacion().getNumeroIdentificacion());
