@@ -1,0 +1,17 @@
+{
+    "header": {
+        "responseCode": 200,
+        "responseMessage": "Exitoso"
+    },
+    "body": {
+        "security": {
+            "token": {
+                "number": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpbG96YWRhQEJhbnJlc2VydmFzLmNvbSIsImp0aSI6IjYyNmJhMjBmLTc2MjItNDkxNy1iYzE0LTE4Zjc2NjEzOTAwOCIsIkVtYWlsIjoiaWxvemFkYUBCYW5yZXNlcnZhcy5jb20iLCJ1aWQiOiIxMTk2IiwiaXAiOiIxMC43MC4zMi41NiIsIm5hbWUiOiJJZGFtaXMgTWFnZGFsZW5hIiwiSW5zdGl0dWNpb25JZCI6IjEwNzYiLCJJZFN1Y3Vyc2FsIjoiMTE4MiIsIklkVXN1YXJpbyI6IjExOTYiLCJPcmdhbml6YWNpb24iOiJCYW5jbyBkZSBSZXNlcnZhcyBkZSBsYSBSZXDDumJsaWNhIERvbWluaWNhbmEuIiwiTm9tYnJlUm9sIjoiQVBJIiwiUm9sSWQiOiIxMDA5IiwiZXhwIjoxNzQ5NTM3Mjc4LCJpc3MiOiJzZGZzZGY0M3R5Z2g2ZXQ1aGdkaGRnaDFkZ2RmZ2RmZ3NlIyQjJGVySXN1ZXIiLCJhdWQiOiJoZ2RoZGhkZ2hnZGgifQ.jLCkuH5TaDUWSDxgexdLSWIca1dgDUnNNevLsInQkOw",
+                "expiration": "2025-06-10T06:34:38.309+00:00",
+                "contractValidation": true,
+                "succeed": true,
+                "message": "Authenticate ilozada@Banreservas.com"
+            }
+        }
+    }
+}
