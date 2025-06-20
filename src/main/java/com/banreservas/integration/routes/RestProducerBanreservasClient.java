@@ -51,22 +51,16 @@ public class RestProducerBanreservasClient extends RouteBuilder {
                     .log(LoggingLevel.INFO, logger, "Consulta de cliente Banreservas exitosa")
                 .when(header("CamelHttpResponseCode").isEqualTo(400))
                     .log(LoggingLevel.ERROR, logger, "Request inválido para servicio de cliente Banreservas")
-                    .throwException(new RuntimeException("Request inválido para búsqueda de cliente"))
                 .when(header("CamelHttpResponseCode").isEqualTo(401))
                     .log(LoggingLevel.ERROR, logger, "Token inválido para servicio de cliente Banreservas")
-                    .throwException(new RuntimeException("Token inválido para búsqueda de cliente"))
                 .when(header("CamelHttpResponseCode").isEqualTo(404))
                     .log(LoggingLevel.ERROR, logger, "Servicio de cliente Banreservas no encontrado")
-                    .throwException(new RuntimeException("Servicio de cliente Banreservas no disponible"))
                 .when(header("CamelHttpResponseCode").isEqualTo(500))
                     .log(LoggingLevel.ERROR, logger, "Error interno en servicio de cliente Banreservas")
-                    .throwException(new RuntimeException("Error interno en servicio de cliente"))
                 .when(header("CamelHttpResponseCode").isEqualTo(503))
                     .log(LoggingLevel.ERROR, logger, "Servicio de cliente Banreservas temporalmente no disponible")
-                    .throwException(new RuntimeException("Servicio de cliente temporalmente no disponible"))
                 .otherwise()
                     .log(LoggingLevel.ERROR, logger, "Error inesperado en servicio de cliente. Código: ${header.CamelHttpResponseCode}")
-                    .throwException(new RuntimeException("Error inesperado en servicio de cliente"))
             .end();
     }
 }

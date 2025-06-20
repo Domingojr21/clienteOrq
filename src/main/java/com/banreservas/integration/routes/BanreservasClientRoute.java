@@ -68,32 +68,44 @@ public class BanreservasClientRoute extends RouteBuilder {
                 .to("direct:backend-banreservas-client-service")
 
                 .choice()
-                .when(header("CamelHttpResponseCode").isEqualTo(200))
-                .log(LoggingLevel.INFO, logger, "Respuesta exitosa del backend")
-                .process(exchange -> {
-                    String jsonResponse = exchange.getIn().getBody(String.class);
-                    logger.debug("JSON Response del backend: {}", jsonResponse);
-                    try {
-                        ObjectMapper mapper = new ObjectMapper();
-                        mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-                        BackendResponse response = mapper.readValue(jsonResponse, BackendResponse.class);
-                        exchange.getIn().setBody(response);
-                    } catch (Exception e) {
-                        logger.error("Error deserializando JSON: {}", e.getMessage());
-                        exchange.setProperty("Mensaje", "Error procesando respuesta del backend: " + e.getMessage());
-                        throw new RuntimeException("Error procesando respuesta del backend: " + e.getMessage());
-                    }
-                })
-                .process(mapBackendResponseProcessor)
-                .otherwise()
-                .log(LoggingLevel.ERROR, logger,
-                        "Error en servicio backend. Código HTTP: ${header.CamelHttpResponseCode}")
-                .setProperty("Mensaje", constant("Error al consultar el servicio de cliente Banreservas"))
-                .process(errorResponseProcessor)
-                .marshal().jacksonXml()
-                .stop()
-                .end()
-                
+.when(header("CamelHttpResponseCode").isEqualTo(200))
+    .log(LoggingLevel.INFO, logger, "Respuesta exitosa del backend")
+    .process(exchange -> {
+        String jsonResponse = exchange.getIn().getBody(String.class);
+        logger.debug("JSON Response del backend: {}", jsonResponse);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+            BackendResponse response = mapper.readValue(jsonResponse, BackendResponse.class);
+            exchange.getIn().setBody(response);
+        } catch (Exception e) {
+            logger.error("Error deserializando JSON: {}", e.getMessage());
+            exchange.setProperty("Mensaje", "Error procesando respuesta del backend: " + e.getMessage());
+            throw new RuntimeException("Error procesando respuesta del backend: " + e.getMessage());
+        }
+    })
+    .process(mapBackendResponseProcessor)
+.otherwise()
+    .log(LoggingLevel.ERROR, logger, "Error en servicio backend. Código HTTP: ${header.CamelHttpResponseCode}")
+    .choice()
+        .when(header("CamelHttpResponseCode").isEqualTo(400))
+            .setProperty("Mensaje", constant("Request inválido para búsqueda de cliente"))
+        .when(header("CamelHttpResponseCode").isEqualTo(401))
+            .setProperty("Mensaje", constant("Token inválido para búsqueda de cliente"))
+        .when(header("CamelHttpResponseCode").isEqualTo(404))
+            .setProperty("Mensaje", constant("Servicio de cliente Banreservas no disponible"))
+        .when(header("CamelHttpResponseCode").isEqualTo(500))
+            .setProperty("Mensaje", constant("Error interno en servicio de cliente"))
+        .when(header("CamelHttpResponseCode").isEqualTo(503))
+            .setProperty("Mensaje", constant("Servicio de cliente temporalmente no disponible"))
+        .otherwise()
+            .setProperty("Mensaje", constant("Error inesperado en servicio de cliente"))
+    .end()
+    .process(errorResponseProcessor)
+    .marshal().jacksonXml()  // <- AGREGAR ESTA LÍNEA
+    .setHeader("Content-Type", constant("text/xml"))
+.end()
+
                 .setHeader("sessionId", exchangeProperty("originalSessionId"))
                 .setHeader("Content-Type", constant("text/xml"))
 

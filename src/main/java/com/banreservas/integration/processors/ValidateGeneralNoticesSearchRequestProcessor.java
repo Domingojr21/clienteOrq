@@ -38,7 +38,6 @@ public class ValidateGeneralNoticesSearchRequestProcessor implements Processor {
             throwValidation(exchange, "El request es obligatorio");
         }
 
-        // Validar campos obligatorios
         validate(exchange, request.getCanal(), "Canal");
         validate(exchange, request.getUsuario(), "Usuario");
         validate(exchange, request.getTerminal(), "Terminal");
@@ -53,24 +52,24 @@ public class ValidateGeneralNoticesSearchRequestProcessor implements Processor {
         validate(exchange, request.getIdentificacion().getTipoIdentificacion().value(),
                 "Identificacion.TipoIdentificacion");
 
-        // Validar headers obligatorios
-        getHeaderOrThrow(exchange, "Authorization", "Unauthorized.");
-        getHeaderOrThrow(exchange, "sessionId", "La cabecera 'sessionId' es obligatoria.");
-
         exchange.setProperty("canalRq", request.getCanal());
         exchange.setProperty("usuarioRq", request.getUsuario());
         exchange.setProperty("terminalRq", request.getTerminal());
-        exchange.setProperty("fechaHoraRq", request.getFechaHora());
-        if (exchange.getProperty("fechaHoraRq") != null) {
+
+        if (request.getFechaHora() != null && !request.getFechaHora().isEmpty()) {
             exchange.setProperty("fechaHoraRq", request.getFechaHora());
         } else {
             exchange.setProperty("fechaHoraRq", LocalDateTime.now().toString());
         }
+
         exchange.setProperty("versionRq", request.getVersion());
         exchange.setProperty("NumeroIdentificacionRq",
                 request.getIdentificacion().getNumeroIdentificacion());
         exchange.setProperty("TipoIdentificacionRq",
                 request.getIdentificacion().getTipoIdentificacion());
+
+        getHeaderOrThrow(exchange, "Authorization", "Unauthorized.");
+        getHeaderOrThrow(exchange, "sessionId", "La cabecera 'sessionId' es obligatoria.");
     }
 
     private void validate(Exchange exchange, String value, String fieldName) {
