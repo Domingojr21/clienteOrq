@@ -18,8 +18,8 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 
  @RegisterForReflection
  public record EmailDto(
-    @JsonProperty("email") String email,
-    @JsonProperty("isPrimary") boolean isPrimary,
-    @JsonProperty("receivesStatements") boolean receivesStatements
+   String email,
+   boolean isPrimary,
+   boolean receivesStatements
  ) implements Serializable {
  }

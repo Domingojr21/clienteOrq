@@ -17,18 +17,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
  @RegisterForReflection
  public record EmploymentDto(
-    @JsonProperty("employeeCode") String employeeCode,
-    @JsonProperty("isGroupEmployee") boolean isGroupEmployee,
-    @JsonProperty("groupEmployee") String groupEmployee,
-    @JsonProperty("economicActivityCode") String economicActivityCode,
-    @JsonProperty("economicActivity") String economicActivity,
-    @JsonProperty("annualIncome") String annualIncome,
-    @JsonProperty("monthlySalary") String monthlySalary,
-    @JsonProperty("totalNetIncome") String totalNetIncome,
-    @JsonProperty("incomeCurrency") String incomeCurrency,
-    @JsonProperty("subjectToISR") String subjectToISR,
-    @JsonProperty("openingCompany") String openingCompany,
-    @JsonProperty("debtLimit") String debtLimit,
-    @JsonProperty("employmentStartDate") String employmentStartDate
+   String employeeCode,
+   boolean isGroupEmployee,
+   String groupEmployee,
+   String economicActivityCode,
+   String economicActivity,
+   String annualIncome,
+   String monthlySalary,
+   String totalNetIncome,
+   String incomeCurrency,
+   String subjectToISR,
+   String openingCompany,
+   String debtLimit,
+   String employmentStartDate
  ) implements Serializable {
  }

@@ -23,8 +23,5 @@ import java.io.Serializable;
  */
 @RegisterForReflection
 public record RequestDto(
-        @JsonProperty("client") 
-        @NotNull(message = "La información del cliente no puede ser nula")
-        @Valid
         RequestClientDto client) implements Serializable {
 }

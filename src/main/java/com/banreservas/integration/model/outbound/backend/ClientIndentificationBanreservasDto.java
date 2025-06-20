@@ -18,13 +18,7 @@ import java.io.Serializable;
  */
 @RegisterForReflection
 public record ClientIndentificationBanreservasDto(
-        @JsonProperty("identificationType") 
-        @NotBlank(message = "El tipo de identificación no puede estar en blanco")
         String identificationType,
-        
-        @JsonProperty("identificationNumber") 
-        @NotBlank(message = "El número de identificación no puede estar en blanco")
-        @Pattern(regexp = "^[^-]*$", message = "El número de identificación no debe contener guiones")
         String identificationNumber) implements Serializable {
         
 }

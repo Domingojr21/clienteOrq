@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @RegisterForReflection
 public record RelatedSystemsDto(
-    @JsonProperty("productTypes") String productTypes,
-    @JsonProperty("system") String system
+    String productTypes,
+    String system
 ) implements Serializable {
 }

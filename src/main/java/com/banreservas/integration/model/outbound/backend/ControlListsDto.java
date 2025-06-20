@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
  @RegisterForReflection
  public record ControlListsDto(
-    @JsonProperty("isFraudster") boolean isFraudster,
-    @JsonProperty("isRestricted") boolean isRestricted
+   boolean isFraudster,
+   boolean isRestricted
  ) implements Serializable {
  }

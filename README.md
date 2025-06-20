@@ -1,6 +1,6 @@
 # ms-orq-cliente-banreservas
 
-Este proyecto es un microservicio SOAP funcionando como orquestador encargado de consumir los servicios **LogInMICM_WS** y **BusquedaGeneralAvisosMICM_WS** de legado.
+Este proyecto es un microservicio SOAP funcionando como orquestador encargado de consumir el servicio **ClienteBanservas_SP** de legado.
 
 Si quieres aprender más de Quarkus, por favor visita el [sitio web oficial](https://quarkus.io/).
 
@@ -75,15 +75,15 @@ Para obtener más información sobre cómo construir ejecutables nativos, consul
 
 ## Endpoints
 
-**POST:** /cards/movements/api/v1/get/getCardMovementsCRM
+**POST:** /banreservas/client/api/v1/banreservasClient
 
-**Descripción:** Este endpoint permite obtener los movimientos financieros de un cliente en CRM.
+**Descripción:** Este endpoint permite obtener la información de clientes banreservas.
 
-**GET:** /cards/movements/api/v1/health
+**GET:** /banreservas/client/api/v1/health
 
 **Descripción:** Monitorea la salud de tu aplicación utilizando SmallRye Health.
 
-**GET:** /cards/movements/api/v1/swagger-ui
+**GET:** /banreservas/client/api/v1/swagger-ui
 
 **Descripción:** Para acceder a Swagger UI y ver la documentación de las apis.
 
@@ -98,13 +98,13 @@ Para obtener más información sobre cómo construir ejecutables nativos, consul
 
 ## Integración con Servicios Externos
 
-El servicio invoca un servicio REST llamado ms-get-cards-movements, que devuelve información sobre movimientos de tarjeta de un cliente en CRM.
+El servicio invoca un servicio REST llamado ms-cliente-banreservas-sp, que devuelve información sobre clientes banreservas desde base de datos.
 
 ### Ejemplo de Solicitud (Request):
 
 ### Encabezados de la Solicitud
 
-- **SOAPAction:** http://tempuri.org/BusquedaGeneralAvisosMICM
+- **SOAPAction:** http://tempuri.org/ClienteBanreservas
 - **Authorization:** Bearer eyj
 - **sessionId:** ID único de la transacción.
 
@@ -114,16 +114,19 @@ El servicio invoca un servicio REST llamado ms-get-cards-movements, que devuelve
    <?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
-    <BusquedaGeneralAvisosMICM xmlns="http://tempuri.org/">
+    <ClienteBanreservas xmlns="http://tempuri.org/">
       <request>
-        <Canal>Web</Canal>
-        <Usuario>UsuarioPrueba</Usuario>
-        <Terminal>TerminalPrueba</Terminal>
-        <FechaHora>2025-06-04T14:30:00</FechaHora>
-        <Version>1.0</Version>
-        <IdOperacion>37544</IdOperacion>
+        <Canal>InterTrade</Canal>
+        <Usuario>Test</Usuario>
+        <Terminal>172.22.50.250</Terminal>
+        <FechaHora></FechaHora>
+        <Version>1</Version>
+        <Identificacion>
+          <NumeroIdentificacion>G05762690</NumeroIdentificacion>
+          <TipoIdentificacion>Pasaporte</TipoIdentificacion>
+        </Identificacion>
       </request>
-    </BusquedaGeneralAvisosMICM>
+    </ClienteBanreservas>
   </soap:Body>
 </soap:Envelope>
 ```
@@ -140,201 +143,111 @@ La API de ms-orq-cliente-banreservas utiliza varios códigos de respuesta para i
 ```xml
  <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
     <soap:Body>
-        <BusquedaGeneralAvisosMICMResponse xmlns="http://tempuri.org/">
-            <BusquedaGeneralAvisosMICMResult>
-                <Canal>Web</Canal>
-                <Usuario>UsuarioPrueba</Usuario>
-                <Terminal>TerminalPrueba</Terminal>
-                <FechaHora>2025-06-04T14:30:00</FechaHora>
-                <TRN_ID>37544</TRN_ID>
+        <ClienteBanreservasResponse xmlns="http://tempuri.org/">
+            <ClienteBanreservasResult>
+                <Canal>InterTrade</Canal>
+                <Usuario>Test</Usuario>
+                <Terminal>172.22.50.250</Terminal>
+                <FechaHora>2025-06-19T21:52:49.680935200</FechaHora>
+                <TRN_ID>123</TRN_ID>
                 <Resultado>0</Resultado>
                 <Mensaje>Consulta exitosa</Mensaje>
-                <Version>1.0</Version>
-                <Avisos>
-                    <Avisos>
-                        <id>404209</id>
-                        <IdTipoAvisoInscripcion>1</IdTipoAvisoInscripcion>
-                        <Aviso>Inscripción de  Aviso de Garantía Mobiliaria</Aviso>
-                        <NumeroRegistro>2025-010000404209</NumeroRegistro>
-                        <FechaRegistro>2025-06-05T15:42:54.310</FechaRegistro>
-                        <FechaVencimiento>2024-04-09T00:00:00</FechaVencimiento>
-                        <IdUsuario>1196</IdUsuario>
-                        <Usuario>Idamis Magdalena Lozada Manzueta</Usuario>
-                        <IdOrganizacion>1076</IdOrganizacion>
-                        <Organizacion>Banco de Reservas de la República Dominicana.</Organizacion>
-                        <IdSucusal>1182</IdSucusal>
-                        <Sucursal>La Principal</Sucursal>
-                        <IdEstado>6</IdEstado>
-                        <Estado>Vencido</Estado>
-                        <moneda>DOP</moneda>
-                        <Monto>1500000</Monto>
-                    </Avisos>
-                    <Avisos>
-                        <id>404197</id>
-                        <IdTipoAvisoInscripcion>1</IdTipoAvisoInscripcion>
-                        <Aviso>Inscripción de  Aviso de Garantía Mobiliaria</Aviso>
-                        <NumeroRegistro>2025-010000404197</NumeroRegistro>
-                        <FechaRegistro>2025-05-29T19:05:39.733</FechaRegistro>
-                        <FechaVencimiento>2029-04-23T00:00:00</FechaVencimiento>
-                        <IdUsuario>1196</IdUsuario>
-                        <Usuario>Idamis Magdalena Lozada Manzueta</Usuario>
-                        <IdOrganizacion>1076</IdOrganizacion>
-                        <Organizacion>Banco de Reservas de la República Dominicana.</Organizacion>
-                        <IdSucusal>1182</IdSucusal>
-                        <Sucursal>La Principal</Sucursal>
-                        <IdEstado>1</IdEstado>
-                        <Estado>Activo</Estado>
-                        <moneda>DOP</moneda>
-                        <Monto>1200000</Monto>
-                    </Avisos>
-                    <Avisos>
-                        <id>404196</id>
-                        <IdTipoAvisoInscripcion>1</IdTipoAvisoInscripcion>
-                        <Aviso>Inscripción de  Aviso de Garantía Mobiliaria</Aviso>
-                        <NumeroRegistro>2025-010000404196</NumeroRegistro>
-                        <FechaRegistro>2025-05-29T18:55:23.790</FechaRegistro>
-                        <FechaVencimiento>2029-04-23T00:00:00</FechaVencimiento>
-                        <IdUsuario>1196</IdUsuario>
-                        <Usuario>Idamis Magdalena Lozada Manzueta</Usuario>
-                        <IdOrganizacion>1076</IdOrganizacion>
-                        <Organizacion>Banco de Reservas de la República Dominicana.</Organizacion>
-                        <IdSucusal>1182</IdSucusal>
-                        <Sucursal>La Principal</Sucursal>
-                        <IdEstado>1</IdEstado>
-                        <Estado>Activo</Estado>
-                        <moneda>DOP</moneda>
-                        <Monto>1200000</Monto>
-                    </Avisos>
-                    <Avisos>
-                        <id>404154</id>
-                        <IdTipoAvisoInscripcion>1</IdTipoAvisoInscripcion>
-                        <Aviso>Inscripción de  Aviso de Garantía Mobiliaria</Aviso>
-                        <NumeroRegistro>2025-010000404154</NumeroRegistro>
-                        <FechaRegistro>2025-05-08T14:13:22.537</FechaRegistro>
-                        <FechaVencimiento>2029-05-17T00:00:00</FechaVencimiento>
-                        <IdUsuario>1196</IdUsuario>
-                        <Usuario>Idamis Magdalena Lozada Manzueta</Usuario>
-                        <IdOrganizacion>1076</IdOrganizacion>
-                        <Organizacion>Banco de Reservas de la República Dominicana.</Organizacion>
-                        <IdSucusal>1182</IdSucusal>
-                        <Sucursal>La Principal</Sucursal>
-                        <IdEstado>1</IdEstado>
-                        <Estado>Activo</Estado>
-                        <moneda>DOP</moneda>
-                        <Monto>384000</Monto>
-                    </Avisos>
-                    <Avisos>
-                        <id>404134</id>
-                        <IdTipoAvisoInscripcion>1</IdTipoAvisoInscripcion>
-                        <Aviso>Inscripción de  Aviso de Garantía Mobiliaria</Aviso>
-                        <NumeroRegistro>2025-010000404134</NumeroRegistro>
-                        <FechaRegistro>2025-04-24T16:33:40.257</FechaRegistro>
-                        <FechaVencimiento>2023-03-27T05:44:37.843</FechaVencimiento>
-                        <IdUsuario>1196</IdUsuario>
-                        <Usuario>Idamis Magdalena Lozada Manzueta</Usuario>
-                        <IdOrganizacion>1076</IdOrganizacion>
-                        <Organizacion>Banco de Reservas de la República Dominicana.</Organizacion>
-                        <IdSucusal>1182</IdSucusal>
-                        <Sucursal>La Principal</Sucursal>
-                        <IdEstado>6</IdEstado>
-                        <Estado>Vencido</Estado>
-                        <moneda>string</moneda>
-                        <Monto>0</Monto>
-                    </Avisos>
-                    <Avisos>
-                        <id>404133</id>
-                        <IdTipoAvisoInscripcion>1</IdTipoAvisoInscripcion>
-                        <Aviso>Inscripción de  Aviso de Garantía Mobiliaria</Aviso>
-                        <NumeroRegistro>2025-010000404133</NumeroRegistro>
-                        <FechaRegistro>2025-04-24T16:30:01.283</FechaRegistro>
-                        <FechaVencimiento>2023-03-27T05:44:37.843</FechaVencimiento>
-                        <IdUsuario>1196</IdUsuario>
-                        <Usuario>Idamis Magdalena Lozada Manzueta</Usuario>
-                        <IdOrganizacion>1076</IdOrganizacion>
-                        <Organizacion>Banco de Reservas de la República Dominicana.</Organizacion>
-                        <IdSucusal>1182</IdSucusal>
-                        <Sucursal>La Principal</Sucursal>
-                        <IdEstado>6</IdEstado>
-                        <Estado>Vencido</Estado>
-                        <moneda>string</moneda>
-                        <Monto>0</Monto>
-                    </Avisos>
-                    <Avisos>
-                        <id>404132</id>
-                        <IdTipoAvisoInscripcion>1</IdTipoAvisoInscripcion>
-                        <Aviso>Inscripción de  Aviso de Garantía Mobiliaria</Aviso>
-                        <NumeroRegistro>2025-010000404132</NumeroRegistro>
-                        <FechaRegistro>2025-04-24T16:29:20.583</FechaRegistro>
-                        <FechaVencimiento>2023-03-27T05:44:37.843</FechaVencimiento>
-                        <IdUsuario>1196</IdUsuario>
-                        <Usuario>Idamis Magdalena Lozada Manzueta</Usuario>
-                        <IdOrganizacion>1076</IdOrganizacion>
-                        <Organizacion>Banco de Reservas de la República Dominicana.</Organizacion>
-                        <IdSucusal>1182</IdSucusal>
-                        <Sucursal>La Principal</Sucursal>
-                        <IdEstado>6</IdEstado>
-                        <Estado>Vencido</Estado>
-                        <moneda>string</moneda>
-                        <Monto>0</Monto>
-                    </Avisos>
-                    <Avisos>
-                        <id>404131</id>
-                        <IdTipoAvisoInscripcion>1</IdTipoAvisoInscripcion>
-                        <Aviso>Inscripción de  Aviso de Garantía Mobiliaria</Aviso>
-                        <NumeroRegistro>2025-010000404131</NumeroRegistro>
-                        <FechaRegistro>2025-04-24T16:27:01.697</FechaRegistro>
-                        <FechaVencimiento>2023-03-27T05:44:37.843</FechaVencimiento>
-                        <IdUsuario>1196</IdUsuario>
-                        <Usuario>Idamis Magdalena Lozada Manzueta</Usuario>
-                        <IdOrganizacion>1076</IdOrganizacion>
-                        <Organizacion>Banco de Reservas de la República Dominicana.</Organizacion>
-                        <IdSucusal>1182</IdSucusal>
-                        <Sucursal>La Principal</Sucursal>
-                        <IdEstado>6</IdEstado>
-                        <Estado>Vencido</Estado>
-                        <moneda>string</moneda>
-                        <Monto>0</Monto>
-                    </Avisos>
-                    <Avisos>
-                        <id>404130</id>
-                        <IdTipoAvisoInscripcion>1</IdTipoAvisoInscripcion>
-                        <Aviso>Inscripción de  Aviso de Garantía Mobiliaria</Aviso>
-                        <NumeroRegistro>2025-010000404130</NumeroRegistro>
-                        <FechaRegistro>2025-04-24T16:25:34.323</FechaRegistro>
-                        <FechaVencimiento>2023-03-27T05:44:37.843</FechaVencimiento>
-                        <IdUsuario>1196</IdUsuario>
-                        <Usuario>Idamis Magdalena Lozada Manzueta</Usuario>
-                        <IdOrganizacion>1076</IdOrganizacion>
-                        <Organizacion>Banco de Reservas de la República Dominicana.</Organizacion>
-                        <IdSucusal>1182</IdSucusal>
-                        <Sucursal>La Principal</Sucursal>
-                        <IdEstado>6</IdEstado>
-                        <Estado>Vencido</Estado>
-                        <moneda>string</moneda>
-                        <Monto>0</Monto>
-                    </Avisos>
-                    <Avisos>
-                        <id>404129</id>
-                        <IdTipoAvisoInscripcion>1</IdTipoAvisoInscripcion>
-                        <Aviso>Inscripción de  Aviso de Garantía Mobiliaria</Aviso>
-                        <NumeroRegistro>2025-010000404129</NumeroRegistro>
-                        <FechaRegistro>2025-04-24T16:24:43.940</FechaRegistro>
-                        <FechaVencimiento>2023-03-27T05:44:37.843</FechaVencimiento>
-                        <IdUsuario>1196</IdUsuario>
-                        <Usuario>Idamis Magdalena Lozada Manzueta</Usuario>
-                        <IdOrganizacion>1076</IdOrganizacion>
-                        <Organizacion>Banco de Reservas de la República Dominicana.</Organizacion>
-                        <IdSucusal>1182</IdSucusal>
-                        <Sucursal>La Principal</Sucursal>
-                        <IdEstado>6</IdEstado>
-                        <Estado>Vencido</Estado>
-                        <moneda>string</moneda>
-                        <Monto>0</Monto>
-                    </Avisos>
-                </Avisos>
-                <TotalRegistro>209662</TotalRegistro>
-            </BusquedaGeneralAvisosMICMResult>
-        </BusquedaGeneralAvisosMICMResponse>
+                <Version>1</Version>
+                <Nombres>MANUEL GONZALO</Nombres>
+                <Apellidos>CERVERA PEREZ</Apellidos>
+                <Apodo/>
+                <PrimerNombre>MANUEL</PrimerNombre>
+                <SegundoNombre>GONZALO</SegundoNombre>
+                <PrimerApellido>CERVERA</PrimerApellido>
+                <SegundoApellido>PEREZ</SegundoApellido>
+                <Sexo>MASCULINO</Sexo>
+                <EstadoCivil>SOLTERO/A</EstadoCivil>
+                <TipoCliente>ASALARIADO PRIVADO</TipoCliente>
+                <TipoPersona>P7</TipoPersona>
+                <EsClienteTop>false</EsClienteTop>
+                <EsEmpleadoGrupo>false</EsEmpleadoGrupo>
+                <Estado>PENDIENTE</Estado>
+                <CodigoActividadEconomica>950004</CodigoActividadEconomica>
+                <DescripcionActividadEconomica>Empleados (asalariados)</DescripcionActividadEconomica>
+                <IngresosAnuales>8000000</IngresosAnuales>
+                <MonedaIngresos>DOP</MonedaIngresos>
+                <LugarNacimiento>MÉXICO</LugarNacimiento>
+                <PaginaWeb/>
+                <CodigoPaisOrigen>MX</CodigoPaisOrigen>
+                <PaisOrigen>MÉXICO</PaisOrigen>
+                <PaisResidencia/>
+                <Extranjero>true</Extranjero>
+                <Nivelgeografico/>
+                <Fallecido>false</Fallecido>
+                <TipoResidencia>NO RESIDENTE</TipoResidencia>
+                <PuntoAtencionEmisora/>
+                <Supervisor/>
+                <EjecutivoDeCuenta>58094</EjecutivoDeCuenta>
+                <EstaEnListaNegra>false</EstaEnListaNegra>
+                <RepresentanteLegal/>
+                <SegmentoCliente>13</SegmentoCliente>
+                <LimiteEndeudamiento>0.00</LimiteEndeudamiento>
+                <CentroDeCosto>41250</CentroDeCosto>
+                <Identificaciones>
+                    <Identificacion>
+                        <TipoIdentificacion>Cedula</TipoIdentificacion>
+                    </Identificacion>
+                </Identificaciones>
+                <Direcciones>
+                    <Direccion>
+                        <Apartamento>23301</Apartamento>
+                        <Calle>AVENIDA ALEMANIA</Calle>
+                        <Casa>s/n</Casa>
+                        <Ciudad>HIGÜEY</Ciudad>
+                        <CodigoPais>DO</CodigoPais>
+                        <CodigoPostal/>
+                        <Edificio>MASA BUSINESS D</Edificio>
+                        <EsPrincipal>true</EsPrincipal>
+                        <IdLocalidad>110101</IdLocalidad>
+                        <Pais>REPUBLICA DOMINICANA</Pais>
+                        <Provincia>LA ALTAGRACIA</Provincia>
+                        <RecibeEstados>false</RecibeEstados>
+                        <Sector>3RE NIVEL, EL CORTECITO</Sector>
+                        <TipoDireccion>RESIDENCIA</TipoDireccion>
+                        <TipoLocal/>
+                    </Direccion>
+                    <Direccion>
+                        <Apartamento>3</Apartamento>
+                        <Calle>3</Calle>
+                        <Casa>2</Casa>
+                        <Ciudad>EL VALLE</Ciudad>
+                        <CodigoPais>DO</CodigoPais>
+                        <CodigoPostal/>
+                        <Edificio>1</Edificio>
+                        <EsPrincipal>false</EsPrincipal>
+                        <IdLocalidad>300301</IdLocalidad>
+                        <Pais>REPUBLICA DOMINICANA</Pais>
+                        <Provincia>HATO MAYOR</Provincia>
+                        <RecibeEstados>false</RecibeEstados>
+                        <Sector/>
+                        <TipoDireccion>LABORAL</TipoDireccion>
+                        <TipoLocal/>
+                    </Direccion>
+                </Direcciones>
+                <Telefonos>
+                    <Telefono>
+                        <Compania>Claro</Compania>
+                        <EsPrincipal>false</EsPrincipal>
+                        <Extension>0</Extension>
+                        <Numero>8097545943</Numero>
+                        <RecibeSms>true</RecibeSms>
+                        <Tipo>TELÉFONO FIJO</Tipo>
+                    </Telefono>
+                </Telefonos>
+                <Correos>
+                    <Correo>
+                        <Direccion>mpantaleon@banreservas.com</Direccion>
+                        <EsPrincipal>true</EsPrincipal>
+                        <RecibeEstados>false</RecibeEstados>
+                    </Correo>
+                </Correos>
+            </ClienteBanreservasResult>
+        </ClienteBanreservasResponse>
     </soap:Body>
 </soap:Envelope>
 ```

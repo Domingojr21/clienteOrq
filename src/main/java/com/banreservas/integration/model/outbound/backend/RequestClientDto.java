@@ -17,9 +17,5 @@ import java.io.Serializable;
  */
 @RegisterForReflection
 public record RequestClientDto(
-        @JsonProperty("identification") 
-        @NotNull(message = "La identificación del cliente no puede ser nula")
-        @Valid
         ClientIndentificationBanreservasDto identification) implements Serializable {
-    
 }

@@ -102,7 +102,7 @@ public class BanreservasClientRoute extends RouteBuilder {
             .setProperty("Mensaje", constant("Error inesperado en servicio de cliente"))
     .end()
     .process(errorResponseProcessor)
-    .marshal().jacksonXml()  // <- AGREGAR ESTA LÍNEA
+    .marshal().jacksonXml()  
     .setHeader("Content-Type", constant("text/xml"))
 .end()
 

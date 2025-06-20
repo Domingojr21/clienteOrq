@@ -24,7 +24,7 @@ public class ValidateGeneralNoticesSearchRequestProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        logger.info("Iniciando validación de la solicitud BusquedaGeneralAvisosMICM");
+        logger.info("Iniciando validación de la solicitud ClienteBanreservas");
 
         ClienteBanreservas soapRequest = exchange.getIn().getBody(ClienteBanreservas.class);
 
@@ -38,6 +38,19 @@ public class ValidateGeneralNoticesSearchRequestProcessor implements Processor {
             throwValidation(exchange, "El request es obligatorio");
         }
 
+        // MAPEAR DATOS DEL REQUEST PRIMERO - ANTES DE LAS VALIDACIONES
+        exchange.setProperty("canalRq", request.getCanal() != null ? request.getCanal() : "");
+        exchange.setProperty("usuarioRq", request.getUsuario() != null ? request.getUsuario() : "");
+        exchange.setProperty("terminalRq", request.getTerminal() != null ? request.getTerminal() : "");
+        exchange.setProperty("versionRq", request.getVersion() != null ? request.getVersion() : "");
+
+        if (request.getFechaHora() != null && !request.getFechaHora().isEmpty()) {
+            exchange.setProperty("fechaHoraRq", request.getFechaHora());
+        } else {
+            exchange.setProperty("fechaHoraRq", LocalDateTime.now().toString());
+        }
+
+        // AHORA HACER LAS VALIDACIONES
         validate(exchange, request.getCanal(), "Canal");
         validate(exchange, request.getUsuario(), "Usuario");
         validate(exchange, request.getTerminal(), "Terminal");
@@ -52,17 +65,7 @@ public class ValidateGeneralNoticesSearchRequestProcessor implements Processor {
         validate(exchange, request.getIdentificacion().getTipoIdentificacion().value(),
                 "Identificacion.TipoIdentificacion");
 
-        exchange.setProperty("canalRq", request.getCanal());
-        exchange.setProperty("usuarioRq", request.getUsuario());
-        exchange.setProperty("terminalRq", request.getTerminal());
-
-        if (request.getFechaHora() != null && !request.getFechaHora().isEmpty()) {
-            exchange.setProperty("fechaHoraRq", request.getFechaHora());
-        } else {
-            exchange.setProperty("fechaHoraRq", LocalDateTime.now().toString());
-        }
-
-        exchange.setProperty("versionRq", request.getVersion());
+        // Mapear los datos de identificación
         exchange.setProperty("NumeroIdentificacionRq",
                 request.getIdentificacion().getNumeroIdentificacion());
         exchange.setProperty("TipoIdentificacionRq",

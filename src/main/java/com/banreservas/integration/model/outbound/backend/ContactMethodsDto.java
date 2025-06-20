@@ -16,12 +16,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @RegisterForReflection
 public record ContactMethodsDto(
-    @JsonProperty("phoneCompany") String phoneCompany,
-    @JsonProperty("isPrimary") boolean isPrimary,
-    @JsonProperty("extension") int extension,
-    @JsonProperty("number") String number,
-    @JsonProperty("numberFormat") String numberFormat,
-    @JsonProperty("receivesSMS") boolean receivesSMS,
-    @JsonProperty("type") String type
+    String phoneCompany,
+    boolean isPrimary,int extension,
+    String number,
+    String numberFormat,
+    boolean receivesSMS,
+    String type
 ) implements Serializable {
 }

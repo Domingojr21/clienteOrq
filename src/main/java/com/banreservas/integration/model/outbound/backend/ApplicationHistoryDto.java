@@ -20,22 +20,22 @@ import java.io.Serializable;
 
  @RegisterForReflection
  public record ApplicationHistoryDto(
-      @JsonProperty("applicationNumber") String applicationNumber,
-    @JsonProperty("applicationDate") String applicationDate,
-    @JsonProperty("productFamily") String productFamily,
-    @JsonProperty("productType") String productType,
-    @JsonProperty("productCode") String productCode,
-    @JsonProperty("status") String status,
-    @JsonProperty("approvalDate") String approvalDate,
-    @JsonProperty("reason1") String reason1,
-    @JsonProperty("reason2") String reason2,
-    @JsonProperty("currency") String currency,
-    @JsonProperty("approvedTerm") BigDecimal approvedTerm,
-    @JsonProperty("approvedAmount") BigDecimal approvedAmount,
-    @JsonProperty("estimatedPayment") BigDecimal estimatedPayment,
-    @JsonProperty("approvedRate") BigDecimal approvedRate,
-    @JsonProperty("dollarLimit") BigDecimal dollarLimit,
-    @JsonProperty("pesoLimit") BigDecimal pesoLimit,
-    @JsonProperty("totalFlexAmount") BigDecimal totalFlexAmount
+    String applicationNumber,
+    String applicationDate,
+    String productFamily,
+    String productType,
+    String productCode,
+    String status,
+    String approvalDate,
+    String reason1,
+    String reason2,
+    String currency,
+    BigDecimal approvedTerm,
+    BigDecimal approvedAmount,
+    BigDecimal estimatedPayment,
+    BigDecimal approvedRate,
+    BigDecimal dollarLimit,
+    BigDecimal pesoLimit,
+    BigDecimal totalFlexAmount
  ) implements Serializable {
  }
